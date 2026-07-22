@@ -3,11 +3,13 @@ import { THEMES, DEFAULT_CONFIG, db, auth, appId } from './config.js';
 import { Icons } from './components/Icons.jsx';
 import { NavButton } from './components/UIComponents.jsx';
 import { AdminModal, ProfileModal } from './components/Modals.jsx';
+import { SplashScreen } from './components/SplashScreen.jsx';
 import { HomePage } from './pages/HomePage.jsx';
 import { StockPage } from './pages/StockPages.jsx';
 import { CalculatorPage } from './pages/CalculatorPage.jsx';
 
 export const App = () => {
+    const [showSplash, setShowSplash] = useState(true); // เพิ่ม State ควบคุม Splash Screen
     const [activeTab, setActiveTab] = useState('home');
     const [config, setConfig] = useState(DEFAULT_CONFIG);
     const [showAdmin, setShowAdmin] = useState(false);
@@ -22,6 +24,14 @@ export const App = () => {
 
     const currentTheme = THEMES[config.theme] || THEMES.default;
     
+    // ตั้งเวลาให้ Splash Screen หายไปหลัง 2 วินาที
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowSplash(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
     useEffect(() => { document.body.style.backgroundColor = config.theme === 'apple' ? '#F5F5F7' : '#f8fafc'; }, [config.theme]);
     
     useEffect(() => {
@@ -107,8 +117,14 @@ export const App = () => {
     const saveUserProfile = async (newProfile) => { if (db && user) { try { await db.doc(`artifacts/${appId}/users/${user.uid}/profile/info`).set(newProfile, { merge: true }); alert("บันทึกข้อมูลโปรไฟล์เรียบร้อย"); } catch (e) { alert("บันทึกโปรไฟล์ไม่สำเร็จ: " + e.message); } } };
     const loadQuotation = (savedItems) => { setItems(savedItems); setShowProfile(false); setActiveTab('calculator'); };
 
+    // ถ้าระบบกำลังโชว์ Splash Screen ให้แสดงเฉพาะหน้าโหลด
+    if (showSplash) {
+        return <SplashScreen theme={currentTheme} />;
+    }
+
+    // ถ้านับครบ 2 วินาทีแล้ว ให้แสดงแอปตามปกติ
     return (
-        <div className={`min-h-screen pb-24 ${currentTheme.textMain}`}>
+        <div className={`min-h-screen pb-24 ${currentTheme.textMain} fade-in`}>
             <div className={`max-w-md mx-auto min-h-screen relative ${currentTheme.bgApp} sm:shadow-2xl sm:my-4 sm:rounded-[40px] sm:min-h-[calc(100vh-2rem)] overflow-hidden border border-white/50 transition-colors duration-500`}>
                 <div className={`h-16 w-full absolute top-0 z-30 flex justify-between items-center px-6 sticky ${config.theme === 'apple' ? 'glass' : 'bg-white/95 backdrop-blur-sm shadow-sm'}`}><div className="flex items-center gap-2">{activeTab !== 'home' && (<img src={config.logoUrl} alt="Logo" className="h-14 w-auto object-contain drop-shadow-sm fade-in" style={{filter: currentTheme.logoFilter}} onError={(e) => e.target.style.display = 'none'} />)}</div><div className="flex items-center gap-3">{user ? (<button className="flex items-center gap-2 focus:outline-none hover:scale-105 transition-transform" onClick={() => setShowProfile(true)}><img src={userProfile?.photoURL || user.photoURL} className="w-9 h-9 rounded-full border-2 border-white shadow-sm" alt="User" /></button>) : (<button onClick={handleLogin} className={`flex items-center gap-2 text-sm font-bold bg-white px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all active:scale-95 border ${currentTheme.border}`}><Icons.Google size={28} className="text-red-600" /> <span className={currentTheme.textMain}>เข้าสู่ระบบด้วย Gmail</span></button>)}</div></div>
                 {activeTab === 'home' && <HomePage setActiveTab={setActiveTab} config={config} onInstall={handleInstallApp} theme={currentTheme} />}
