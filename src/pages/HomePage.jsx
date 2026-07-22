@@ -4,18 +4,25 @@ import { Icons } from '../components/Icons.jsx';
 export const HomePage = ({ setActiveTab, config, onInstall, theme }) => (
     <div className="flex flex-col items-center justify-center h-full pt-32 p-8 text-center fade-in pb-32">
         <div className="relative mb-8 group flex justify-center">
-            {/* โลโก้ Modern SVG แบบเดียวกับ Splash Screen */}
-            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-500 hover:scale-105 drop-shadow-xl">
-                <circle cx="60" cy="60" r="50" fill="url(#sun-gradient-home)" />
-                <rect x="25" y="40" width="70" height="8" rx="4" fill="#1e293b" />
-                <rect x="15" y="55" width="80" height="8" rx="4" fill="#1e293b" />
-                <rect x="35" y="70" width="60" height="8" rx="4" fill="#1e293b" />
+            {/* New Modern SVG Logo */}
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform transition-transform duration-500 hover:scale-105 drop-shadow-[0_12px_24px_rgba(244,63,94,0.2)]">
                 <defs>
-                    <linearGradient id="sun-gradient-home" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#f43f5e" />
-                        <stop offset="1" stopColor="#f97316" />
+                    <linearGradient id="sunGlowHome" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#FF3366" />
+                        <stop offset="50%" stopColor="#FF6B00" />
+                        <stop offset="100%" stopColor="#FFA800" />
+                    </linearGradient>
+                    <linearGradient id="slatGradientHome" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#0F172A" />
+                        <stop offset="100%" stopColor="#1E293B" />
                     </linearGradient>
                 </defs>
+                <circle cx="78" cy="42" r="30" fill="url(#sunGlowHome)" />
+                <rect x="18" y="32" width="52" height="9" rx="4.5" fill="url(#slatGradientHome)" />
+                <rect x="18" y="48" width="84" height="9" rx="4.5" fill="url(#slatGradientHome)" />
+                <rect x="36" y="64" width="66" height="9" rx="4.5" fill="url(#slatGradientHome)" />
+                <rect x="50" y="80" width="52" height="9" rx="4.5" fill="url(#slatGradientHome)" />
+                <circle cx="23" cy="84.5" r="4.5" fill="#FF6B00" />
             </svg>
         </div>
         
